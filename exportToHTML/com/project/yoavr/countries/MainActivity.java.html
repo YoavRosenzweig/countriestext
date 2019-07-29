@@ -1,0 +1,274 @@
+<html>
+<head>
+<title>MainActivity.java</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<style type="text/css">
+.ln { color: #999999; font-weight: normal; font-style: normal; }
+.s0 { color: rgb(0,0,128); font-weight: bold; }
+.s1 { color: rgb(0,0,0); }
+.s2 { color: rgb(0,128,0); font-weight: bold; }
+.s3 { color: rgb(0,0,255); }
+.s4 { color: rgb(128,128,128); font-style: italic; }
+</style>
+</head>
+<BODY BGCOLOR="#ffffff">
+<TABLE CELLSPACING=0 CELLPADDING=5 COLS=1 WIDTH="100%" BGCOLOR="#c0c0c0" >
+<TR><TD><CENTER>
+<FONT FACE="Arial, Helvetica" COLOR="#000000">
+MainActivity.java</FONT>
+</center></TD></TR></TABLE>
+<pre>
+<span class="s0">package </span><span class="s1">com.project.yoavr.countries; 
+ 
+</span><span class="s0">import </span><span class="s1">android.content.Intent; 
+</span><span class="s0">import </span><span class="s1">android.os.Build; 
+</span><span class="s0">import </span><span class="s1">android.os.Bundle; 
+</span><span class="s0">import </span><span class="s1">android.support.annotation.RequiresApi; 
+</span><span class="s0">import </span><span class="s1">android.support.v7.app.AppCompatActivity; 
+</span><span class="s0">import </span><span class="s1">android.support.v7.widget.LinearLayoutManager; 
+</span><span class="s0">import </span><span class="s1">android.support.v7.widget.RecyclerView; 
+</span><span class="s0">import </span><span class="s1">android.view.View; 
+</span><span class="s0">import </span><span class="s1">android.widget.Button; 
+</span><span class="s0">import </span><span class="s1">android.widget.TextView; 
+ 
+</span><span class="s0">import </span><span class="s1">com.android.volley.Request; 
+</span><span class="s0">import </span><span class="s1">com.android.volley.RequestQueue; 
+</span><span class="s0">import </span><span class="s1">com.android.volley.Response; 
+</span><span class="s0">import </span><span class="s1">com.android.volley.VolleyError; 
+</span><span class="s0">import </span><span class="s1">com.android.volley.toolbox.JsonArrayRequest; 
+</span><span class="s0">import </span><span class="s1">com.android.volley.toolbox.JsonObjectRequest; 
+</span><span class="s0">import </span><span class="s1">com.android.volley.toolbox.Volley; 
+ 
+</span><span class="s0">import </span><span class="s1">org.json.JSONArray; 
+</span><span class="s0">import </span><span class="s1">org.json.JSONException; 
+</span><span class="s0">import </span><span class="s1">org.json.JSONObject; 
+ 
+</span><span class="s0">import </span><span class="s1">java.util.ArrayList; 
+</span><span class="s0">import </span><span class="s1">java.util.Collections; 
+</span><span class="s0">import </span><span class="s1">java.util.Comparator; 
+ 
+</span><span class="s0">public class </span><span class="s1">MainActivity </span><span class="s0">extends </span><span class="s1">AppCompatActivity </span><span class="s0">implements </span><span class="s1">AdpterListContry.OnItemClickListener { 
+ 
+    </span><span class="s0">public static final </span><span class="s1">String ENGLISHNAME=</span><span class="s2">&quot;englishname&quot;</span><span class="s1">; 
+    </span><span class="s0">public static final </span><span class="s1">String NATIVEHNAME=</span><span class="s2">&quot;nativename&quot;</span><span class="s1">; 
+ 
+    </span><span class="s0">private </span><span class="s1">TextView title; 
+    </span><span class="s0">private </span><span class="s1">Double areasize=</span><span class="s3">0.0</span><span class="s1">; 
+    </span><span class="s0">private </span><span class="s1">RecyclerView mRecycleview; 
+    </span><span class="s0">private </span><span class="s1">AdpterListContry mAdpterList; 
+    </span><span class="s0">private </span><span class="s1">ArrayList&lt;Item&gt; itemArrayList; 
+    </span><span class="s0">private </span><span class="s1">ArrayList&lt;Item&gt; sizearaylist; 
+    </span><span class="s0">private </span><span class="s1">RequestQueue mRequestQueue; 
+    </span><span class="s0">private </span><span class="s1">Button alpa; 
+    </span><span class="s0">private </span><span class="s1">Button size; 
+    </span><span class="s0">private int </span><span class="s1">temp=</span><span class="s3">1</span><span class="s1">,sizecounter=</span><span class="s3">1</span><span class="s1">; 
+ 
+    @Override 
+    </span><span class="s0">protected void </span><span class="s1">onCreate(Bundle savedInstanceState) { 
+        </span><span class="s0">super</span><span class="s1">.onCreate(savedInstanceState); 
+ 
+        setContentView(R.layout.activity_main); 
+        mRecycleview =findViewById(R.id.recycler); 
+        mRecycleview.setHasFixedSize(</span><span class="s0">true</span><span class="s1">); 
+        mRecycleview.setLayoutManager(</span><span class="s0">new </span><span class="s1">LinearLayoutManager(</span><span class="s0">this</span><span class="s1">)); 
+        itemArrayList=</span><span class="s0">new </span><span class="s1">ArrayList&lt;&gt;(); 
+        sizearaylist=</span><span class="s0">new </span><span class="s1">ArrayList&lt;&gt;(); 
+        mRequestQueue =Volley.newRequestQueue(</span><span class="s0">this</span><span class="s1">); 
+        title=findViewById(R.id.titlemain); 
+        alpa=findViewById(R.id.Z_a); 
+        size=findViewById(R.id.size); 
+       </span><span class="s4">// AskJason();</span><span class="s1"> 
+        Ask(temp); 
+        alpa.setOnClickListener(</span><span class="s0">new </span><span class="s1">View.OnClickListener() { 
+            @Override 
+            </span><span class="s0">public void </span><span class="s1">onClick(View v) { 
+                temp++; 
+                Ask(temp); 
+ 
+            } 
+        }); 
+        size.setOnClickListener(</span><span class="s0">new </span><span class="s1">View.OnClickListener() { 
+            @Override 
+            </span><span class="s0">public void </span><span class="s1">onClick(View v) { 
+                sizecounter++; 
+                Order(sizecounter); 
+            } 
+        }); 
+ 
+    } 
+ 
+    </span><span class="s0">private void </span><span class="s1">AskJason(){ 
+        String url=</span><span class="s2">&quot;https://restcountries.eu/rest/v2/all&quot;</span><span class="s1">; 
+        JsonObjectRequest request=</span><span class="s0">new </span><span class="s1">JsonObjectRequest(Request.Method.GET, url, </span><span class="s0">null</span><span class="s1">, 
+                </span><span class="s0">new </span><span class="s1">Response.Listener&lt;JSONObject&gt;() { 
+                    @RequiresApi(api = Build.VERSION_CODES.KITKAT) 
+                    @Override 
+                    </span><span class="s0">public void </span><span class="s1">onResponse(JSONObject response) { 
+                        </span><span class="s0">try </span><span class="s1">{ 
+                            JSONArray jsonArray=response.getJSONArray(</span><span class="s2">&quot;&quot;</span><span class="s1">); 
+ 
+                            </span><span class="s0">for </span><span class="s1">(</span><span class="s0">int </span><span class="s1">i = </span><span class="s3">0</span><span class="s1">; i &lt;jsonArray.length() ; i++) { 
+ 
+                                    JSONObject jasonname=jsonArray.getJSONObject(i); 
+ 
+                                    String Englishname=jasonname.getString(</span><span class="s2">&quot;name&quot;</span><span class="s1">); 
+                                    String NativeName=jasonname.getString(</span><span class="s2">&quot;NativeName&quot;</span><span class="s1">); 
+ 
+                                    itemArrayList.add(</span><span class="s0">new </span><span class="s1">Item(Englishname,NativeName)); 
+ 
+                                mAdpterList=</span><span class="s0">new </span><span class="s1">AdpterListContry(MainActivity.</span><span class="s0">this</span><span class="s1">,itemArrayList); 
+                                mRecycleview.setAdapter(mAdpterList); 
+ 
+ 
+                            } 
+                        } </span><span class="s0">catch </span><span class="s1">(JSONException e) { 
+                            e.printStackTrace(); 
+                        } 
+                    } 
+                }, </span><span class="s0">new </span><span class="s1">Response.ErrorListener() { 
+            @Override 
+            </span><span class="s0">public void </span><span class="s1">onErrorResponse(VolleyError error) { 
+                error.printStackTrace(); 
+            } 
+        }); 
+        mRequestQueue.add(request); 
+    } 
+ 
+    </span><span class="s0">private void </span><span class="s1">Ask(</span><span class="s0">final int </span><span class="s1">click){ 
+        itemArrayList.clear(); 
+        String url=</span><span class="s2">&quot;https://restcountries.eu/rest/v2/all&quot;</span><span class="s1">; 
+        JsonArrayRequest jsonArrayRequest=</span><span class="s0">new </span><span class="s1">JsonArrayRequest(Request.Method.GET, url, </span><span class="s0">null</span><span class="s1">, 
+                </span><span class="s0">new </span><span class="s1">Response.Listener&lt;JSONArray&gt;() { 
+                    @Override 
+                    </span><span class="s0">public void </span><span class="s1">onResponse(JSONArray response) { 
+                        </span><span class="s0">if </span><span class="s1">((click % </span><span class="s3">2</span><span class="s1">) == </span><span class="s3">0</span><span class="s1">) { 
+                            title.setText(</span><span class="s2">&quot;countries in order Z-A&quot;</span><span class="s1">); 
+                            </span><span class="s0">for </span><span class="s1">(</span><span class="s0">int </span><span class="s1">i = response.length(); i &gt; </span><span class="s3">0</span><span class="s1">; i--) { 
+                                </span><span class="s0">try </span><span class="s1">{ 
+                                    JSONObject jasonname = (JSONObject) response.get(i); 
+ 
+                                    String Englishname = jasonname.getString(</span><span class="s2">&quot;name&quot;</span><span class="s1">); 
+                                    String NativeName = jasonname.getString(</span><span class="s2">&quot;nativeName&quot;</span><span class="s1">); 
+                                    itemArrayList.add(</span><span class="s0">new </span><span class="s1">Item(Englishname, NativeName)); 
+                                    mAdpterList = </span><span class="s0">new </span><span class="s1">AdpterListContry(MainActivity.</span><span class="s0">this</span><span class="s1">, itemArrayList); 
+                                    mRecycleview.setAdapter(mAdpterList); 
+                                    mAdpterList.setItemClickListener(MainActivity.</span><span class="s0">this</span><span class="s1">); 
+ 
+                                } </span><span class="s0">catch </span><span class="s1">(JSONException e) { 
+                                    e.printStackTrace(); 
+                                } 
+                            } 
+                        } </span><span class="s0">else </span><span class="s1">{ 
+                            title.setText(</span><span class="s2">&quot;countries in order A-Z&quot;</span><span class="s1">); 
+                            </span><span class="s0">for </span><span class="s1">(</span><span class="s0">int </span><span class="s1">i = </span><span class="s3">0</span><span class="s1">; i &lt; response.length(); i++) { 
+                                </span><span class="s0">try </span><span class="s1">{ 
+                                    JSONObject jasonname = (JSONObject) response.get(i); 
+ 
+                                    String Englishname = jasonname.getString(</span><span class="s2">&quot;name&quot;</span><span class="s1">); 
+                                    String NativeName = jasonname.getString(</span><span class="s2">&quot;nativeName&quot;</span><span class="s1">); 
+                                    itemArrayList.add(</span><span class="s0">new </span><span class="s1">Item(Englishname, NativeName)); 
+ 
+                                    mAdpterList = </span><span class="s0">new </span><span class="s1">AdpterListContry(MainActivity.</span><span class="s0">this</span><span class="s1">, itemArrayList); 
+                                    mRecycleview.setAdapter(mAdpterList); 
+                                    mAdpterList.setItemClickListener(MainActivity.</span><span class="s0">this</span><span class="s1">); 
+ 
+                                } </span><span class="s0">catch </span><span class="s1">(JSONException e) { 
+                                    e.printStackTrace(); 
+                                } 
+ 
+ 
+                            } 
+ 
+                        } 
+                    } 
+                }, </span><span class="s0">new </span><span class="s1">Response.ErrorListener() { 
+            @Override 
+            </span><span class="s0">public void </span><span class="s1">onErrorResponse(VolleyError error) { 
+                error.printStackTrace(); 
+            } 
+        }); 
+        mRequestQueue.add(jsonArrayRequest); 
+    } 
+ 
+    </span><span class="s0">private void </span><span class="s1">Order(</span><span class="s0">final int </span><span class="s1">counter){ 
+        sizearaylist.clear(); 
+        String url=</span><span class="s2">&quot;https://restcountries.eu/rest/v2/all&quot;</span><span class="s1">; 
+        JsonArrayRequest jsonObjectRequest=</span><span class="s0">new </span><span class="s1">JsonArrayRequest(Request.Method.GET, url, </span><span class="s0">null</span><span class="s1">, 
+                </span><span class="s0">new </span><span class="s1">Response.Listener&lt;JSONArray&gt;() { 
+                    @Override 
+                    </span><span class="s0">public void </span><span class="s1">onResponse(JSONArray response) { 
+                        </span><span class="s0">try </span><span class="s1">{ 
+                            </span><span class="s0">for </span><span class="s1">(</span><span class="s0">int </span><span class="s1">i = </span><span class="s3">0</span><span class="s1">; i &lt; response.length(); i++) { 
+                                JSONObject jasonname = (JSONObject) response.get(i); 
+ 
+                                String Englishname = jasonname.getString(</span><span class="s2">&quot;name&quot;</span><span class="s1">); 
+                                String NativeName = jasonname.getString(</span><span class="s2">&quot;nativeName&quot;</span><span class="s1">); 
+                                </span><span class="s0">if</span><span class="s1">(jasonname.isNull(</span><span class="s2">&quot;area&quot;</span><span class="s1">)){ 
+                                     areasize = </span><span class="s3">0.0</span><span class="s1">; 
+                                }</span><span class="s0">else </span><span class="s1">{ 
+                                    areasize = jasonname.getDouble(</span><span class="s2">&quot;area&quot;</span><span class="s1">); 
+                                } 
+                                sizearaylist.add(</span><span class="s0">new </span><span class="s1">Item(Englishname, NativeName, areasize)); 
+                            } 
+                            </span><span class="s0">if</span><span class="s1">(counter%</span><span class="s3">2</span><span class="s1">==</span><span class="s3">0</span><span class="s1">) { 
+                                title.setText(</span><span class="s2">&quot;countries in order Small-Big&quot;</span><span class="s1">); 
+                                </span><span class="s0">for </span><span class="s1">(</span><span class="s0">int </span><span class="s1">i = </span><span class="s3">0</span><span class="s1">; i &lt; sizearaylist.size(); i++) { 
+                                    Collections.sort(sizearaylist, </span><span class="s0">new </span><span class="s1">Comparator&lt;Item&gt;() { 
+                                        @Override 
+                                        </span><span class="s0">public int </span><span class="s1">compare(Item o1, Item o2) { 
+                                            mAdpterList = </span><span class="s0">new </span><span class="s1">AdpterListContry(MainActivity.</span><span class="s0">this</span><span class="s1">, sizearaylist); 
+                                            mRecycleview.setAdapter(mAdpterList); 
+                                            mAdpterList.setItemClickListener(MainActivity.</span><span class="s0">this</span><span class="s1">); 
+                                            </span><span class="s0">return </span><span class="s1">o1.getSize().compareTo(o2.getSize()); 
+ 
+                                        } 
+                                    }); 
+ 
+                                } 
+                            }</span><span class="s0">else </span><span class="s1">{ 
+                                title.setText(</span><span class="s2">&quot;countries in order Big-small&quot;</span><span class="s1">); 
+                                </span><span class="s0">for </span><span class="s1">(</span><span class="s0">int </span><span class="s1">i = </span><span class="s3">0</span><span class="s1">; i &lt; sizearaylist.size(); i++) { 
+                                    Collections.sort(sizearaylist, </span><span class="s0">new </span><span class="s1">Comparator&lt;Item&gt;() { 
+                                        @Override 
+                                        </span><span class="s0">public int </span><span class="s1">compare(Item o1, Item o2) { 
+                                            mAdpterList = </span><span class="s0">new </span><span class="s1">AdpterListContry(MainActivity.</span><span class="s0">this</span><span class="s1">, sizearaylist); 
+                                            mRecycleview.setAdapter(mAdpterList); 
+                                            mAdpterList.setItemClickListener(MainActivity.</span><span class="s0">this</span><span class="s1">); 
+                                            </span><span class="s0">return </span><span class="s1">o2.getSize().compareTo(o1.getSize()); 
+ 
+                                        } 
+                                    }); 
+ 
+                                } 
+                            } 
+                        } 
+ 
+                           </span><span class="s0">catch</span><span class="s1">(JSONException e){ 
+                                e.printStackTrace(); 
+ 
+                            } 
+ 
+                    } 
+                }, </span><span class="s0">new </span><span class="s1">Response.ErrorListener() { 
+            @Override 
+            </span><span class="s0">public void </span><span class="s1">onErrorResponse(VolleyError error) { 
+ 
+            } 
+        }); 
+        mRequestQueue.add(jsonObjectRequest); 
+    } 
+ 
+ 
+    @Override 
+    </span><span class="s0">public void </span><span class="s1">OnItenClick(</span><span class="s0">int </span><span class="s1">position) { 
+        Intent intent=</span><span class="s0">new </span><span class="s1">Intent(MainActivity.</span><span class="s0">this</span><span class="s1">,ChoosenCountry.</span><span class="s0">class</span><span class="s1">); 
+        Item clickcountry= itemArrayList.get(position); 
+        intent.putExtra(ENGLISHNAME,clickcountry.getEname()); 
+        intent.putExtra(NATIVEHNAME,clickcountry.getEnativeName()); 
+        startActivity(intent); 
+    } 
+ 
+} 
+</span></pre>
+</body>
+</html>
